@@ -1,5 +1,5 @@
 cleanup = "YES";
-datadirectory = 'C:\\Users\\Sophia\\Desktop\\test\\image_csv';
+datadirectory = 'C:\\Users\\Sophia\\Documents\\GitHub\\FBCE_ImageProcessing\\_dir_intermediate_';
 
 if cleanup == "YES"
     og_dir = pwd;
