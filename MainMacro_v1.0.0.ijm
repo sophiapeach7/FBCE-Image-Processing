@@ -1,14 +1,15 @@
 SaveDir = "C:/Users/Sophia/Desktop/test/test_save/";
 dir_intermediate = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing/_dir_intermediate_/";
 StackPlotDataMacro_dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing/StackPlotDataMacro.ijm";
+background_dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing/WORKING BACKGROUND/";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 File.makeDirectory(dir_intermediate);
 run("Image Sequence...");
 NameArray = getList("image.titles");
 ImportedName = NameArray[0];
-bck = getFileList("C:/Users/Sophia/Desktop/FBCE/Images/WORKING BACKGROUND/");
-open("C:/Users/Sophia/Desktop/FBCE/Images/WORKING BACKGROUND/"+bck[0]);
+bck = getFileList(background_dir);
+open(background_dir+bck[0]);
 imageCalculator("Subtract create 32-bit stack",ImportedName,bck[0]);
 selectWindow("Result of "+ImportedName);
 setAutoThreshold("Default");
