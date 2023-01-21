@@ -1,7 +1,9 @@
 SaveDir = "C:/Users/Sophia/Desktop/test/test_save/";
 dir_intermediate = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing/_dir_intermediate_/";
+StackPlotDataMacro_dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing/StackPlotDataMacro.ijm"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+File.makeDirectory(dir_intermediate);
 run("Image Sequence...");
 NameArray = getList("image.titles");
 ImportedName = NameArray[0];
@@ -31,12 +33,13 @@ run("Images to Stack", "use");
 setBatchMode(false);
 run("Invert LUT");
 run("Select All");
-runMacro("C:/Users/Sophia/Desktop/FBCE/Images/StackPlotDataMacro.ijm");
+runMacro(StackPlotDataMacro_dir);
 run("Input/Output...", "jpeg=85 gif=-1 file=.csv use_file");
 saveAs("Results", SaveDir+ImportedName+".csv");
 for (i=0; i<list.length; i++) {
 	File.delete(dir_intermediate+list[i]);
 }
+File.delete(dir_intermediate);
 selectWindow("Log");
 run("Close");
 beep();
