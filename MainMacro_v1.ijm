@@ -1,0 +1,17 @@
+run("Image Sequence...");
+NameArray = getList("image.titles");
+ImportedName = NameArray[0];
+bck = getFileList("C:/Users/Sophia/Desktop/FBCE/Images/WORKING BACKGROUND/");
+open("C:/Users/Sophia/Desktop/FBCE/Images/WORKING BACKGROUND/"+bck[0]);
+imageCalculator("Subtract create 32-bit stack",ImportedName,bck[0]);
+selectWindow("Result of "+ImportedName);
+setAutoThreshold("Default");
+setThreshold(-1000000000000000000000000000000.0000, -16.0000);
+run("NaN Background", "stack");
+run("Analyze Particles...", "size=5-Infinity show=Masks include stack");
+run("Select All");
+runMacro("C:/Users/Sophia/Desktop/FBCE/Images/StackPlotDataMacro.ijm");
+run("Input/Output...", "jpeg=85 gif=-1 file=.csv use_file");
+close("*");
+print("Macro Completed");
+print("Datum Point: "+ImportedName);
