@@ -21,7 +21,6 @@ selectWindow("Result of "+ImportedName);
 close();  
 beep();
 waitForUser("See whether stack needs cleaning \n \nClick OK to proceed");
-beep();
 Dialog.create("DECISION REQUIRED");
 Dialog.addMessage("Does stack need cleaning?");
 Dialog.addCheckbox("Check to clean", true);
@@ -31,8 +30,7 @@ if (clean) {
     File.makeDirectory(dir_intermediate);
     selectWindow("Mask of Result of "+ImportedName);
     run("Image Sequence... ", "dir="+dir_intermediate+" format=Text name=[] start=1 digits=4 use");
-    beep();
-    waitForUser("Run MATLAB Cleanup Code \n \nClick OK only AFTER it is completed");
+    run("IJMrunMAT ");
     list = getFileList(dir_intermediate);
     setBatchMode(true);
     for (i=0; i<list.length; i++) {
@@ -68,3 +66,5 @@ else {
     saveAs("Results", SaveDir+ImportedName+".csv");
     selectWindow("Results");
     run("Close");
+    close("*");
+}
