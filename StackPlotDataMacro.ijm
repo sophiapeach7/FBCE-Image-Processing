@@ -15,6 +15,7 @@ macro "Stack profile Data" {
      for (i=0; i<x.length; i++)
          setResult("x", i, x[i]);
      close();
+     showStatus("Creating profile plots...");
 
      n = nSlices;
      for (slice=1; slice<=n; slice++) {
