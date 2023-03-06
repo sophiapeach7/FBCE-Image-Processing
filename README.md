@@ -3,8 +3,8 @@
 This project contains all the tools necessary to process images for NASA FBCE project. Images are processed using ImageJ software along with Matlab if necessary. Data is then analyzed using Matlab code.
 
 To setup all the tools several files need to be move in appropriate locations:
-  IJMRunMAT_.m => C:\Program Files\fiji-win64\Fiji.app\plugins\Scripts\
-  MainMacro_v..._.ijim => C:\Program Files\fiji-win64\Fiji.app\plugins\Macros\
+    IJMRunMAT_.m => C:\Program Files\fiji-win64\Fiji.app\plugins\Scripts\
+    MainMacro_v..._.ijim => C:\Program Files\fiji-win64\Fiji.app\plugins\Macros\
   
 Matlab IJMRunMAT_.m file is assigned to the Scrits folder so that ImageJ can recognize it when it is invoked from MainMacro_v..._.ijim. 
 Assigning MainMacro_v..._.ijim to the Macros folder allows to quickly run it from ImageJ program. It will be located under Plugins > Macros in the program tab.
