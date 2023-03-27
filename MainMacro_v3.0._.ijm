@@ -43,11 +43,11 @@ for (i=SinglePhaseDP; i<AllFolders.length; i++) {
 	run("Analyze Particles...", "size=5-Infinity show=Masks include stack");
 	setBatchMode(false);
 	rename(ImportedSequenceName);
-	beep();
 	if (CleanRest) {
 		clean = true;
 	}
 	else {
+		beep();
 		waitForUser("See whether stack needs cleaning \n \nClick OK to proceed");
 		Dialog.create("DECISION REQUIRED");
 		Dialog.addMessage("Does stack need cleaning?\n \nCheck 'Clean Rest' to clean the rest of folders as well.\nIf checked, you will not be prompted this again.");
@@ -55,6 +55,7 @@ for (i=SinglePhaseDP; i<AllFolders.length; i++) {
 		Dialog.addCheckbox("Clean rest",false);
 		Dialog.show();
 		clean = Dialog.getCheckbox();
+		CleanRest = Dialog.getCheckbox();
 	}
 	if (clean) {
 		File.makeDirectory(dir_intermediate);
@@ -62,11 +63,11 @@ for (i=SinglePhaseDP; i<AllFolders.length; i++) {
 	    run("Image Sequence... ", "dir="+dir_intermediate+" format=Text name=[] start=1 digits=4 use");
 	    close();
 	    showStatus("Running cleanup code...");
-	    run("IJMrunMAT ");
+	    run("RunMatlabClean ");
 	    list = getFileList(dir_intermediate);
 	    setBatchMode(true);
-	    for (i=0; i<list.length; i++) {
-		    file = dir_intermediate + list[i];
+	    for (n=0; n<list.length; n++) {
+		    file = dir_intermediate + list[n];
 		    run("Text Image... ", "open=&file");
 	    }
 	    showStatus("Converting images to stack...");
@@ -80,13 +81,15 @@ for (i=SinglePhaseDP; i<AllFolders.length; i++) {
 	    runMacro(StackPlotDataMacro_dir);
 	    run("Input/Output...", "jpeg=85 gif=-1 file=.csv use_file");
 	    showStatus("Deleting .txt files...");
-	    for (i=0; i<list.length; i++) {
-	    	File.delete(dir_intermediate+list[i]);
-	    	showProgress(i,list.length);
+	    for (n=0; n<list.length; n++) {
+	    	File.delete(dir_intermediate+list[n]);
+	    	showProgress(n,list.length);
 	    }
 	    showProgress(1,0);
 	    File.delete(dir_intermediate);
 	    selectWindow("Log");
+	    run("Close");
+	    selectWindow(ImportedSequenceName);
 	    run("Close");
 	}
 	else {
@@ -95,10 +98,11 @@ for (i=SinglePhaseDP; i<AllFolders.length; i++) {
 	    run("Select All");
 	    runMacro(StackPlotDataMacro_dir);
 	    run("Input/Output...", "jpeg=85 gif=-1 file=.csv use_file");
+	    selectWindow(ImportedSequenceName);
+	    run("Close");
 	}
 	saveAs("Results", SaveDir+ImportedSequenceName+".csv");
 	selectWindow("Results");
-	setBatchMode("show");
 	run("Close");
 }
 
