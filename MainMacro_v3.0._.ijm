@@ -1,5 +1,4 @@
 dir_intermediate = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing/_dir_intermediate_/";
-StackPlotDataMacro_dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing/StackPlotDataMacro.ijm";
 background_dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing/WORKING BACKGROUND/";
 CleanRest = false;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,7 +99,7 @@ for (i=SinglePhaseDP; i<AllFolders.length; i++) {
 	    run("Invert LUT");
 	    run("Select All");
 	    run("Select All");
-	    runMacro(StackPlotDataMacro_dir);
+	    run("StackPlotDataMacro ");
 	    run("Input/Output...", "jpeg=85 gif=-1 file=.csv use_file");
 	    print("    ...Deleting .txt files...\n\n");
 	    showStatus("Deleting .txt files...");
