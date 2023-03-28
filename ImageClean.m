@@ -32,6 +32,8 @@ end
 close all force;
 clear;
 clc;
+userpath('clear');
+
 
 function nUpdateWaitbar(input)
 N = evalin("base","N");
