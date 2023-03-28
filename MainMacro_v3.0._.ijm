@@ -1,13 +1,20 @@
-SaveDir = "C:/Users/Sophia/Desktop/test/test_save/";
 dir_intermediate = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing/_dir_intermediate_/";
 StackPlotDataMacro_dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing/StackPlotDataMacro.ijm";
 background_dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing/WORKING BACKGROUND/";
 CleanRest = false;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-FolderDir = getDirectory("Indicate directory of an experiment");
+print("MACRO STARTED\n_______________________________________________________ \n\n");
+folderdir = getDirectory("Indicate directory of experiment images");
+FolderDir = File.getDirectory(folderdir+"mockfile");
+savedir = getDirectory("Indicate directory where to save results");
+SaveDir = File.getDirectory(savedir+"mockfile");
+DataDir = SaveDir+"ImageJ Data/";
+VideoDir = SaveDir+"Videos/";
+File.makeDirectory(DataDir);
+File.makeDirectory(VideoDir);
 AllFolders = getFileList(FolderDir);
-Dialog.create("SINGLE-PHASE DATUM POINTS")
+Dialog.create("SINGLE-PHASE DATUM POINTS");
 Dialog.addMessage("Input how many Datum Points at the BEGINNING include only single-phase images.\n \nThese folders will be ignored and one of the images will be used as background.\n \nEnter 0 for none.");
 Dialog.addNumber("Number of single-phase DP",0);
 Dialog.show();
@@ -28,17 +35,27 @@ else {
 for (i=SinglePhaseDP; i<AllFolders.length; i++) {
 	setBatchMode(true);
 	Folder = FolderDir + AllFolders[i];
+	print("OPENING FOLDER: "+Folder+"\nDATUM POINT: "+(i+1)+"\n\n");
 	File.openSequence(Folder);
+	print("    ...Importing image sequence...\n\n");
 	NameArray = getList("image.titles");
 	ImportedSequenceName = NameArray[0];
+	File.makeDirectory(VideoDir+ImportedSequenceName+"/");
+	print("    ...Creating raw movie...\n\n");
+	showStatus("Creating movie");
+	showProgress(1,0);
+	run("Movie...", "frame=30 container=.mov using=H.264 video=excellent save=["+VideoDir+ImportedSequenceName+"/"+ImportedSequenceName+"_raw"+".mov]");
 	open(BackgroundImageOpen);
+	print("    ...Subtracting background...\n\n");
 	showStatus("Subtracting background...");
 	imageCalculator("Subtract create 32-bit stack",ImportedSequenceName,BackgroundImage);
 	selectWindow("Result of "+ImportedSequenceName);
+	print("    ...Setting threshold...\n\n");
 	showStatus("Setting threshold...");
 	setAutoThreshold("Default");
 	setThreshold(-1000000000000000000000000000000.0000, -16.0000);
 	run("NaN Background", "stack");
+	print("    ...Analyzing particles...\n\n");
 	showStatus("Analyzing particles...");
 	run("Analyze Particles...", "size=5-Infinity show=Masks include stack");
 	setBatchMode(false);
@@ -60,26 +77,32 @@ for (i=SinglePhaseDP; i<AllFolders.length; i++) {
 	if (clean) {
 		File.makeDirectory(dir_intermediate);
 	    selectWindow(ImportedSequenceName);
+	    print("    ...Saving stack as .txt...\n\n");
 	    run("Image Sequence... ", "dir="+dir_intermediate+" format=Text name=[] start=1 digits=4 use");
 	    close();
+	    print("    ...Running MATLAB cleanup code...\n\n");
 	    showStatus("Running cleanup code...");
 	    run("RunMatlabClean ");
 	    list = getFileList(dir_intermediate);
 	    setBatchMode(true);
+	    print("    ...Opening cleaned images...\n\n");
 	    for (n=0; n<list.length; n++) {
 		    file = dir_intermediate + list[n];
 		    run("Text Image... ", "open=&file");
 	    }
+	    print("    ...Converting images to stack...\n\n");
 	    showStatus("Converting images to stack...");
 	    run("Images to Stack", "use");
 	    setBatchMode(false);
 	    setBatchMode("hide");
+	    print("    ...Running batch profile analysis macro...\n\n");
 	    rename(ImportedSequenceName);
 	    run("Invert LUT");
 	    run("Select All");
 	    run("Select All");
 	    runMacro(StackPlotDataMacro_dir);
 	    run("Input/Output...", "jpeg=85 gif=-1 file=.csv use_file");
+	    print("    ...Deleting .txt files...\n\n");
 	    showStatus("Deleting .txt files...");
 	    for (n=0; n<list.length; n++) {
 	    	File.delete(dir_intermediate+list[n]);
@@ -89,20 +112,24 @@ for (i=SinglePhaseDP; i<AllFolders.length; i++) {
 	    File.delete(dir_intermediate);
 	    selectWindow("Log");
 	    run("Close");
-	    selectWindow(ImportedSequenceName);
-	    run("Close");
 	}
 	else {
+		print("    ...Running batch profile analysis macro...\n\n");
 	    selectWindow(ImportedSequenceName);
 	    setBatchMode("hide");
 	    run("Select All");
 	    runMacro(StackPlotDataMacro_dir);
 	    run("Input/Output...", "jpeg=85 gif=-1 file=.csv use_file");
-	    selectWindow(ImportedSequenceName);
-	    run("Close");
 	}
-	saveAs("Results", SaveDir+ImportedSequenceName+".csv");
+	selectWindow(ImportedSequenceName);
+	print("    ...Creating processed movie...");
+	run("Movie...", "frame=30 container=.mov using=H.264 video=excellent save=["+VideoDir+ImportedSequenceName+"/"+ImportedSequenceName+"_processed"+".mov]");
+	selectWindow(ImportedSequenceName);
+	run("Close");
+	saveAs("Results", DataDir+ImportedSequenceName+".csv");
 	selectWindow("Results");
+	run("Close");
+	selectWindow("Log");
 	run("Close");
 }
 
@@ -113,5 +140,5 @@ if (File.exists(background_dir)) {
 	run("Close");
 	}
 beep();
-waitForUser("Macro Completed!\n \nCompleted folder directory:\n"+FolderDir+"\n \nResulting stacks which were saved are displayed for review.\n \nClick OK to clear all.");
+waitForUser("Macro Completed!\n \nCompleted folder directory:\n"+FolderDir+"\n \nClick OK to clear all.");
 close("*");
