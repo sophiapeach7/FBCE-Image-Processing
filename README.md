@@ -5,18 +5,18 @@
 This project contains all the tools necessary to process images for NASA FBCE project. Images are processed using ImageJ software along with Matlab, if necessary. Data is then analyzed using Matlab code.
 
 To execute: MainMacro is located under Plugins > Macros in the program tab.
-
-
-
-
+-
+-
+-
+-
 SOFTWARE REQUIREMENTS:
 
 	MATLAB R2022a with Parallel Computing Toolbox installed
 	FIJI (ImageJ2)
-
-
-
-
+-
+-
+-
+-
 SETUP:
 
 MainMacro and ImageClean.m utilize temporary directories the path of which might need to be changed depending on where GitHub folder is located and where the user prefers to store temporary folders. To change directories in MainMacro go to Plugins > Macros > Edit... and open MainMacro_v3.0.0_.ijim.
@@ -52,10 +52,10 @@ SaveAsMovie_.jar plugins will need to be updated. To do that go to Menu>Help>Upd
 	https://sites.imagej.net/adaptiveThreshold/
 
 Restart ImageJ.
-
-
-
-
+-
+-
+-
+-
 WARNINGS:
 
 It is recommended that the user does not utilize processing machine for any other tasks while running this program as it demands up to 100% of CPU power. It is also recommended to use additional cooling mechanisms to avoid severe overheating.
