@@ -9,7 +9,7 @@ To execute: MainMacro is located under Plugins > Macros in the program tab.
 
 
 
-# SOFTWARE REQUIREMENTS:
+### SOFTWARE REQUIREMENTS:
 
 	MATLAB R2022a with Parallel Computing Toolbox installed
 	FIJI (ImageJ2)
@@ -17,7 +17,7 @@ To execute: MainMacro is located under Plugins > Macros in the program tab.
 
 
 
-# SETUP:
+### SETUP:
 
 MainMacro and ImageClean.m utilize temporary directories the path of which might need to be changed depending on where GitHub folder is located and where the user prefers to store temporary folders. To change directories in MainMacro go to Plugins > Macros > Edit... and open MainMacro_v3.0.0_.ijim.
 
@@ -56,7 +56,7 @@ Restart ImageJ.
 
 
 
-# WARNINGS:
+### WARNINGS:
 
 It is recommended that the user does not utilize processing machine for any other tasks while running this program as it demands up to 100% of CPU power. It is also recommended to use additional cooling mechanisms to avoid severe overheating.
 
