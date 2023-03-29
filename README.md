@@ -39,11 +39,13 @@ Java cannot run ImageClean.m directly, therefore, it needs to be invoked by anot
     Change it as needed. Make sure to use \\ instead of \.
 
 After making changes to the directories, move the following files in appropriate locations:
+
     MainMacro_v..._.ijim => C:\Program Files\fiji-win64\Fiji.app\plugins\Macros\
     All files in Scripts => C:\Program Files\fiji-win64\Fiji.app\plugins\Scripts\
     All files in SaveAsMovie_Resources => C:\Program Files\fiji-win64\Fiji.app\plugins\
 
 SaveAsMovie_.jar plugins will need to be updated. To do that go to Menu>Help>Update..., and add the following URLs via "Manage update sites">"Add update site":
+
 	https://sites.imagej.net/Template_Matching/
 	https://sites.imagej.net/iterativePIV/
 	https://sites.imagej.net/FFMPEG-javacv/
