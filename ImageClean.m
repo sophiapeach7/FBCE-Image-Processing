@@ -32,7 +32,7 @@ end
 close all force;
 clear;
 clc;
-userpath('clear');
+cd("C:\");
 
 
 function nUpdateWaitbar(input)

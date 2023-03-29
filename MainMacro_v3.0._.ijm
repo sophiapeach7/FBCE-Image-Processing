@@ -88,7 +88,7 @@ for (i=SinglePhaseDP; i<AllFolders.length; i++) {
 	    print("    ...Opening cleaned images...\n\n");
 	    for (n=0; n<list.length; n++) {
 		    file = dir_intermediate + list[n];
-		    run("Text Image... ", "open=&file");
+		    run("Text Image... ", "open="+file);
 	    }
 	    print("    ...Converting images to stack...\n\n");
 	    showStatus("Converting images to stack...");
@@ -139,6 +139,6 @@ if (File.exists(background_dir)) {
 	selectWindow("Log");
 	run("Close");
 	}
-beep();
-waitForUser("Macro Completed!\n \nCompleted folder directory:\n"+FolderDir+"\n \nClick OK to clear all.");
 close("*");
+beep();
+showMessage("Macro Completed!\n \nCompleted folder directory:\n"+FolderDir);
