@@ -1,9 +1,9 @@
-GitHub_Dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing";
+Temp_Dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 CleanRest = false;
-dir_intermediate = GitHub_Dir+"/_dir_intermediate_/";
-background_dir = GitHub_Dir+"/WORKING BACKGROUND/";
+dir_intermediate = Temp_Dir+"/_dir_intermediate_/";
+background_dir = Temp_Dir+"/WORKING BACKGROUND/";
 print("MACRO STARTED\n_______________________________________________________ \n\n");
 folderdir = getDirectory("Indicate directory of experiment images");
 FolderDir = File.getDirectory(folderdir+"mockfile");
