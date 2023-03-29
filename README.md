@@ -19,7 +19,7 @@ SOFTWARE REQUIREMENTS:
 
 SETUP:
 
-MainMacro and ImageClean.m utilize temporary directories the path of which might need to be changed depending on where GitHub folder is located and where the user prefers to store temporary folders. To change directories in MainMacro go to Plugins > Macros > Edit... and open MainMacro_v..._.ijim.
+MainMacro and ImageClean.m utilize temporary directories the path of which might need to be changed depending on where GitHub folder is located and where the user prefers to store temporary folders. To change directories in MainMacro go to Plugins > Macros > Edit... and open MainMacro_v3.0.0_.ijim.
 
     Default directory in MainMacro: 
         Temp_Dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing";
@@ -40,7 +40,7 @@ Java cannot run ImageClean.m directly, therefore, it needs to be invoked by anot
 
 After making changes to the directories, move the following files in appropriate locations:
 
-    MainMacro_v..._.ijim => C:\Program Files\fiji-win64\Fiji.app\plugins\Macros\
+    MainMacro_v3.0.0_.ijim => C:\Program Files\fiji-win64\Fiji.app\plugins\Macros\
     All files in Scripts => C:\Program Files\fiji-win64\Fiji.app\plugins\Scripts\
     All files in SaveAsMovie_Resources => C:\Program Files\fiji-win64\Fiji.app\plugins\
 
