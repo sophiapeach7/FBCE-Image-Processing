@@ -28,7 +28,7 @@ MainMacro and ImageClean.m utilize temporary directories the path of which might
 
     Default directory in ImageClean:
         datadirectory = 'C:\Users\Sophia\Documents\GitHub\FBCE_ImageProcessing\_dir_intermediate_';
-    This references one of the temporary folders. Thi directory has to match the chosen directory above. 
+    This references one of the temporary folders. This directory has to match the chosen directory above. 
     Do not end path in \.
 
 
