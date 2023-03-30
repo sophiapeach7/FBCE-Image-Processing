@@ -1,4 +1,4 @@
-# ImageJ_FBCE_ImageProcessing
+# FBCE Image Processing
 
 !!!READ THE WHOLE DOCUMENT!!!
 
