@@ -4,7 +4,7 @@
 
 This project contains all the tools necessary to process images for NASA FBCE project. Images are processed using ImageJ software along with Matlab, if necessary. Data is then analyzed using Matlab code.
 
-To execute: MainMacro is located under Plugins > Macros in the program tab.
+To execute: FBCE_Batch_Image_Processor_v3.0.1_.ijm is located under Plugins > Macros in the program tab.
 
 
 
@@ -19,14 +19,14 @@ To execute: MainMacro is located under Plugins > Macros in the program tab.
 
 ### SETUP:
 
-MainMacro and ImageClean.m utilize temporary directories the path of which might need to be changed depending on where GitHub folder is located and where the user prefers to store temporary folders. To change directories in MainMacro go to Plugins > Macros > Edit... and open MainMacro_v3.0.1_.ijim.
+MainMacro and ImageClean.m utilize temporary directories the path of which might need to be changed depending on where GitHub folder is located and where the user prefers to store temporary folders. To change directories in MainMacro go to Plugins > Macros > Edit... and open FBCE_Batch_Image_Processor_v3.0.1_.ijm. Alternatively, it can also be opened with Notepad application.
 
-    Default directory in MainMacro: 
+    Default directory in FBCE_Batch_Image_Processor_v3.0.1_.ijm: 
         Temp_Dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing";
     This is the directory where temporary folders will be stored. Change it to any accessible direcrory. 
     Make sure to use instead of \. Do not end path in / or \.
 
-    Default directory in ImageClean:
+    Default directory in ImageClean.m:
         datadirectory = 'C:\Users\Sophia\Documents\GitHub\FBCE_ImageProcessing\_dir_intermediate_';
     This references one of the temporary folders. This directory has to match the chosen directory above. 
     Do not end path in \.
@@ -40,7 +40,7 @@ Java cannot run ImageClean.m directly, therefore, it needs to be invoked by anot
 
 After making changes to the directories, move the following files in appropriate locations:
 
-    MainMacro_v3.0.1_.ijim => C:\Program Files\fiji-win64\Fiji.app\plugins\Macros\
+    FBCE_Batch_Image_Processor_v3.0.1_.ijm => C:\Program Files\fiji-win64\Fiji.app\plugins\Macros\
     All files in Scripts => C:\Program Files\fiji-win64\Fiji.app\plugins\Scripts\
     All files in SaveAsMovie_Resources => C:\Program Files\fiji-win64\Fiji.app\plugins\
 
