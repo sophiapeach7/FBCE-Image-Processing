@@ -58,7 +58,7 @@ Restart ImageJ.
 
 ### WARNINGS:
 
-It is recommended that the user does not utilize processing machine for any other tasks while running this program as it demands up to 100% of CPU power. It is also recommended to use additional cooling mechanisms to avoid severe overheating.
+It is recommended that the user does not utilize their processing machine for any other tasks while running this program as it demands up to 100% of CPU power. It is also recommended to use additional cooling mechanisms to avoid severe overheating.
 
 
 
