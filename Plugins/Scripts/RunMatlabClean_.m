@@ -1,0 +1,1 @@
+run('C:\\Users\\Sophia\\Documents\\GitHub\\FBCE_ImageProcessing\\Child Applications\\ImageClean.m');
