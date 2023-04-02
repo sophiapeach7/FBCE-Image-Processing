@@ -13,6 +13,19 @@ DataDir = SaveDir+"ImageJ Data/";
 VideoDir = SaveDir+"Videos/";
 File.makeDirectory(DataDir);
 File.makeDirectory(VideoDir);
+//
+VFASaveDir = File.getDirectory(SaveDir);
+File.makeDirectory(VFASaveDir+"Analysis/");
+File.makeDirectory(VFASaveDir+"Analysis/Void Fraction Analysis/");
+VFASaveDir = VFASaveDir+"Analysis/Void Fraction Analysis/";
+Dialog.create("EXPERIMENT INFORMATION");
+Dialog.addMessage("Input experiment information");
+Dialog.addString("Experiment number","0.0.0");
+Dialog.addString("Experiment name","...");
+Dialog.show();
+ExpNum = Dialog.getString();
+ExpName = Dialog.getString();
+//
 AllFolders = getFileList(FolderDir);
 Dialog.create("SINGLE-PHASE DATUM POINTS");
 Dialog.addMessage("Input how many Datum Points at the BEGINNING include only single-phase images.\n \nThese folders will be ignored and one of the images will be used as background.\n \nEnter 0 for none.");
@@ -140,5 +153,15 @@ if (File.exists(background_dir)) {
 	run("Close");
 	}
 close("*");
+//
+setResult("Single-phase DP",0,SinglePhaseDP);
+setResult("ImageJ Data Dir",0,DataDir);
+setResult("Save Dir",0,FinalSaveDir);
+setResult("Save Name",0,ExpNum+"_"+ExpName+"_Void_Fraction_Matrix");
+setResult("Plot Name",0,"'"+ExpNum+" "+ExpName+"' Void Fraction Plots");
+selectWindow("Results");
+saveAs("Results",Temp_Dir+"/_intermediate_data_transfer_.csv");
+run("Close");
+//
 beep();
 showMessage("Macro Completed!\n \nCompleted folder directory:\n"+FolderDir);
