@@ -1,15 +1,15 @@
 %% LOADING SETTINGS
 Temp_Dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing";
-Settings = readmatrix(Temp_Dir+"/_intermediate_data_transfer_.csv","OutputType","string");
+Settings = readmatrix(Temp_Dir+"/_intermediate_data_transfer_.csv","OutputType","string","Range",1);
 delete(Temp_Dir+"/_intermediate_data_transfer_.csv");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-n1p = str2double(Settings(2,2)); %number of single phase datum points at the BEGINNING
+n1p = str2double(Settings(2,1)); %number of single phase datum points at the BEGINNING
 plot_starting_DP = n1p+1; %NOT same as avrgmatrix indexation, refer to test matrices for correct DP value
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-datadirectory = Settings(2,3); %Full directory of ImageJ Profile Plot data
-savedirectory = Settings(2,4); %Full directory where to save output matrix
-savefileNAME = Settings(2,5); %Output matrix name
-plottitle = Settings(2,6); %Experiment name
+datadirectory = Settings(2,2); %Full directory of ImageJ Profile Plot data
+savedirectory = Settings(2,3); %Full directory where to save output matrix
+savefileNAME = Settings(2,4); %Output matrix name
+plottitle = Settings(2,5); %Experiment name
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -59,7 +59,7 @@ title(plottitle)
 xlabel("Length of the Channel, x/L")
 ylabel("Void Fraction")
 ylim([0 1]);
-xlim([0 2040]);
+xlim([0 1]);
 savefig(VFplot,savedirectory+savefileNAME+".fig");
 saveas(VFplot,savedirectory+savefileNAME+".png");
 
