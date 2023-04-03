@@ -1,4 +1,8 @@
 %% LOADING SETTINGS
+clear;
+clc;
+close all force;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Temp_Dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing";
 Settings = readmatrix(Temp_Dir+"/_intermediate_data_transfer_.csv","OutputType","string","Range",1);
 delete(Temp_Dir+"/_intermediate_data_transfer_.csv");
@@ -8,8 +12,9 @@ plot_starting_DP = n1p+1; %NOT same as avrgmatrix indexation, refer to test matr
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 datadirectory = Settings(2,2); %Full directory of ImageJ Profile Plot data
 savedirectory = Settings(2,3); %Full directory where to save output matrix
-savefileNAME = Settings(2,4); %Output matrix name
-plottitle = Settings(2,5); %Experiment name
+save_csv_fileNAME = Settings(2,4); %Output matrix name
+save_plot_fileNAME = Settings(2,5); %Outpot plot files name
+plottitle = Settings(2,6); %Experiment name
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -45,11 +50,12 @@ for i = 2+n1p:nfiles+1+n1p
 end
 
 %% SAVING RESULTS
-writematrix(avrgmatrix,savedirectory+savefileNAME+".csv");
+writematrix(avrgmatrix,savedirectory+save_csv_fileNAME+".csv");
 
 %% PLOTTING DATA
 columns = size(avrgmatrix,2);
-VFplot = figure("Name","Void Fraction Plots","Units","normalized","Position",[0 0 1 1]);
+VFplot = figure("Name","Void Fraction Plots","Units","normalized","Position",[0.05 0.05 0.9 0.8]);
+VFplot.WindowState = "maximized";
 for p=1+plot_starting_DP:columns
     plot(avrgmatrix(:,1),avrgmatrix(:,p))
     text(1+0.005,avrgmatrix(end,p),string(p-1),'Color','red','FontSize',10)
@@ -60,8 +66,8 @@ xlabel("Length of the Channel, x/L")
 ylabel("Void Fraction")
 ylim([0 1]);
 xlim([0 1]);
-savefig(VFplot,savedirectory+savefileNAME+".fig");
-saveas(VFplot,savedirectory+savefileNAME+".png");
+savefig(VFplot,savedirectory+save_plot_fileNAME+".fig");
+saveas(VFplot,savedirectory+save_plot_fileNAME+".png");
 
 
 %% FUNCTIONS
