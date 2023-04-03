@@ -131,7 +131,7 @@ for (i=SinglePhaseDP; i<AllFolders.length; i++) {
 	    selectWindow(ImportedSequenceName);
 	    setBatchMode("hide");
 	    run("Select All");
-	    runMacro(StackPlotDataMacro_dir);
+	    run("StackPlotDataMacro ");
 	    run("Input/Output...", "jpeg=85 gif=-1 file=.csv use_file");
 	}
 	selectWindow(ImportedSequenceName);
@@ -156,10 +156,11 @@ close("*");
 //
 setResult("Single-phase DP",0,SinglePhaseDP);
 setResult("ImageJ Data Dir",0,DataDir);
-setResult("Save Dir",0,FinalSaveDir);
+setResult("Save Dir",0,VFASaveDir);
 setResult("Save Name",0,ExpNum+"_"+ExpName+"_Void_Fraction_Matrix");
 setResult("Plot Name",0,"'"+ExpNum+" "+ExpName+"' Void Fraction Plots");
 selectWindow("Results");
+run("Input/Output...", "jpeg=85 gif=-1 file=.csv use_file save_column");
 saveAs("Results",Temp_Dir+"/_intermediate_data_transfer_.csv");
 run("Close");
 //
