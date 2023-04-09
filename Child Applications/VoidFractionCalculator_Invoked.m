@@ -6,6 +6,8 @@ close all force;
 Temp_Dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing";
 Settings = readmatrix(Temp_Dir+"/_intermediate_data_transfer_.csv","OutputType","string","Range",1);
 delete(Temp_Dir+"/_intermediate_data_transfer_.csv");
+bck_gv = readmatrix(Temp_Dir+"/Background_GrayValues.csv");
+delete(Temp_Dir+"/Background_GrayValues.csv");
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 n1p = str2double(Settings(2,1)); %number of single phase datum points at the BEGINNING
 plot_starting_DP = n1p+1; %NOT same as avrgmatrix indexation, refer to test matrices for correct DP value
@@ -21,9 +23,12 @@ plottitle = Settings(2,6); %Experiment name
 %% LOADING DATA
 cd(datadirectory)
 files = dir('*.csv');
+wbar = waitbar(0,"Loading data...");
 for i = 1:length(files)
     load(files(i).name, '-ascii');
+    waitbar(i/length(files),wbar);
 end
+close(wbar);
 nfiles = i;
 
 avrgmatrix = zeros(2040,nfiles+1+n1p);
@@ -40,12 +45,15 @@ if n1p > 0
 end
 
 %% PROCESSING DATA
+
+bck_gv = bck_gv*164/255;
+
 for i = 2+n1p:nfiles+1+n1p
     [empty,name] = fileparts(files(i-1-n1p).name);
     xname = append('X',name);
     DP = eval(xname);
     n = eval(name);
-    navrg = vecavrg(DP);
+    navrg = vecavrg(DP,bck_gv);
     avrgmatrix(:,n+1) = navrg;
 end
 
@@ -69,9 +77,8 @@ xlim([0 1]);
 savefig(VFplot,savedirectory+save_plot_fileNAME+".fig");
 saveas(VFplot,savedirectory+save_plot_fileNAME+".png");
 
-
 %% FUNCTIONS
-function avrg = vecavrg(n)
+function avrg = vecavrg(n,bck_gv)
 nrows = size(n,1);
 avrg = zeros(nrows,1);
 
@@ -80,6 +87,7 @@ for k=1:nrows
     avrg(k) = mean(row);
 end
 
-avrg = avrg*164/255/103;
+avrg = avrg*164/255;
+avrg = avrg./bck_gv;
 
 end
