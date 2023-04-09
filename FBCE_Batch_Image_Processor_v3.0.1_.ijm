@@ -145,13 +145,27 @@ for (i=SinglePhaseDP; i<AllFolders.length; i++) {
 	run("Close");
 }
 
-if (File.exists(background_dir)) {
-	File.delete(BackgroundImageOpen);
-	File.delete(background_dir);
-	selectWindow("Log");
-	run("Close");
-	}
 close("*");
+open(BackgroundImageOpen);
+setAutoThreshold("Default");
+setThreshold(0, 69, "raw");
+run("Convert to Mask");
+run("Invert");
+run("Invert LUTs");
+run("Analyze Particles...", "size=5-Infinity pixel show=Masks include");
+selectWindow(BackgroundImage);
+run("Close");
+selectWindow("Mask of "+BackgroundImage);
+run("Select All");
+Table.create("Results");
+profile = getProfile();
+for (i=0; i<profile.length; i++)
+      setResult("Value", i, profile[i]);
+updateResults;
+saveAs("Results", Temp_Dir+"/Background_GrayValues.csv");
+close("*");
+selectWindow("Results");
+run("Close");
 setResult("Single-phase DP",0,SinglePhaseDP);
 setResult("ImageJ Data Dir",0,DataDir);
 setResult("Save Dir",0,VFASaveDir);
@@ -163,5 +177,11 @@ run("Input/Output...", "jpeg=85 gif=-1 file=.csv use_file save_column");
 saveAs("Results",Temp_Dir+"/_intermediate_data_transfer_.csv");
 run("Close");
 run("Run VoidFractionCalculator ");
+if (File.exists(background_dir)) {
+	File.delete(BackgroundImageOpen);
+	File.delete(background_dir);
+	selectWindow("Log");
+	run("Close");
+	}
 beep();
 showMessage("Macro Completed!\n \nCompleted folder directory:\n"+FolderDir);
