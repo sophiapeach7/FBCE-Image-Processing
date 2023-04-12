@@ -24,7 +24,7 @@ MainMacro and ImageClean.m utilize temporary directories the path of which might
     Default directory in FBCE_Batch_Image_Processor_v3.0.1_.ijm: 
         Temp_Dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing";
     This is the directory where temporary folders will be stored. Change it to any accessible direcrory. 
-    Make sure to use instead of \. Do not end path in / or \.
+    Make sure to use / instead of \. Do not end path in /.
 
     Default directory in ImageClean.m:
         datadirectory = 'C:\Users\Sophia\Documents\GitHub\FBCE_ImageProcessing\_dir_intermediate_';
