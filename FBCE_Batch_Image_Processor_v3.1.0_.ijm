@@ -33,7 +33,7 @@ Dialog.show();
 SinglePhaseDP = Dialog.getNumber();
 if (SinglePhaseDP > 0) {
 	BackgroundImageArray = getFileList(FolderDir + AllFolders[0]);
-	BackgroundImage = BackgroundImageArray[0];
+	BackgroundImage = BackgroundImageArray[1];
 	BackgroundImageOpen = FolderDir + AllFolders[0] + BackgroundImage;
 }
 else {
@@ -48,7 +48,7 @@ for (i=SinglePhaseDP; i<AllFolders.length; i++) {
 	setBatchMode(true);
 	Folder = FolderDir + AllFolders[i];
 	print("OPENING FOLDER: "+Folder+"\nDATUM POINT: "+(i+1)+"\n\n");
-	File.openSequence(Folder);
+	File.openSequence(Folder, " start=2");
 	print("    ...Importing image sequence...\n\n");
 	NameArray = getList("image.titles");
 	ImportedSequenceName = NameArray[0];
