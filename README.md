@@ -32,11 +32,26 @@ MainMacro and ImageClean.m utilize temporary directories the path of which might
     Do not end path in \.
 
 
-Java cannot run ImageClean.m directly, therefore, it needs to be invoked by another MATLAB script. RunMatlabClean_.m invokes program ImageClean.m located in the GitHub folder. Therefore, the directory to ImageClean.m has to be changed in RunMatlabClean_.m, if it does not correspond to the default path.
+Java cannot run ImageClean.m directly, therefore, it needs to be invoked by another MATLAB script. Run_ImageClean_.m invokes program ImageClean.m located in the GitHub folder. Therefore, the directory to ImageClean.m has to be changed in Run_ImageClean_.m, if it does not correspond to the default path.
 
-    Default directory in RunMatlabClean_.m:
-        'C:\\Users\\Sophia\\Documents\\GitHub\\FBCE_ImageProcessing\\ImageClean.m'
+    Default directory in Run_ImageClean_.m:
+        'C:\\Users\\Sophia\\Documents\\GitHub\\FBCE_ImageProcessing\\Child Applications\\ImageClean.m'
     Change it as needed. Make sure to use \\ instead of \.
+
+
+Similarly, Run_VoidFractionCalculator_.m invokes VoidFractionCalculator_Invoked.m. Therefore, directory of VoidFractionCalculator_Invoked.m has to be routed in Run_VoidFractionCalculator_.m.
+
+    Default directory in Run_VoidFractionCalculator_.m:
+        'C:\\Users\\Sophia\\Documents\\GitHub\\FBCE_ImageProcessing\\Child Applications\\VoidFractionCalculator_Invoked.m'
+    Change it as needed. Make sure to use \\ instead of \.
+
+
+Next, directory of the intermediate folder for Void Fraction Analysis has to be indicated in the VoidFractionCalculator_Invoked.m script.
+    Default directory in VoidFractionCalculator_.m:
+        "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing"
+    Change it to the same location as the default directory of FBCE_Batch_Image_Processor_v3.0.1_.ijm.
+    
+	
 
 After making changes to the directories, move the following files in appropriate locations:
 
@@ -51,8 +66,7 @@ SaveAsMovie_.jar plugins will need to be updated. To do that go to Menu>Help>Upd
 	https://sites.imagej.net/FFMPEG-javacv/
 	https://sites.imagej.net/adaptiveThreshold/
 
-Restart ImageJ.
-
+Finally, in same window for "Manage update sites" add an update site called ImageJ-Matlab. Close the window, submit changes and restart ImageJ.
 
 
 
