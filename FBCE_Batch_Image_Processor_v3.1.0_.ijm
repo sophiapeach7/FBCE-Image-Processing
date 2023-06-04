@@ -202,10 +202,12 @@ for (i=StartDP; i<AllFolders.length; i++) {
 	setBatchMode(false);
 	//After several operations the name of the stack is changed. This command renames it back to the datum point number.
 	rename(ImportedSequenceName);
+	
 	//If CleanRest is activated, automatically sets 'clean' to true.
 	if (CleanRest) {
 		clean = true;
 	}
+	
 	//Otherwise prompts user to decide whether the stack needs to be cleaned of shadows.
 	else {
 	    //Produces a beeping sound to attract user's attention.
@@ -222,6 +224,8 @@ for (i=StartDP; i<AllFolders.length; i++) {
 		clean = Dialog.getCheckbox();
 		CleanRest = Dialog.getCheckbox();
 	}
+	
+	
 	//If datum point is selected to be cleaned.
 	if (clean) {
 	    //Create intermediate diarectory where stack is saved as .txt files.
@@ -292,6 +296,7 @@ for (i=StartDP; i<AllFolders.length; i++) {
 	    selectWindow("Log");
 	    run("Close");
 	}
+	
 	//If the datum point does not have to be cleaned.
 	else {
 	    //Print status update.
@@ -307,6 +312,7 @@ for (i=StartDP; i<AllFolders.length; i++) {
 	    //Format the table.
 	    run("Input/Output...", "jpeg=85 gif=-1 file=.csv use_file");
 	}
+	
 	//Select stack window.
 	selectWindow(ImportedSequenceName);
 	//Print status update.
@@ -326,6 +332,7 @@ for (i=StartDP; i<AllFolders.length; i++) {
 	selectWindow("Log");
 	run("Close");
 }
+
 
 //Close all image windows.
 close("*");
@@ -363,6 +370,7 @@ close("*");
 //Select the table and close it.
 selectWindow("Results");
 run("Close");
+
 //Create a new "Resulsts" table and write useful data to it for MATLAB processing.
 setResult("Single-phase DP",0,SinglePhaseDP);
 setResult("ImageJ Data Dir",0,DataDir);
@@ -380,6 +388,7 @@ saveAs("Results",Temp_Dir+"/_intermediate_data_transfer_.csv");
 run("Close");
 //Run analysis code on MATLAB.
 run("Run VoidFractionCalculator ");
+
 //If intermediate background directory exists, delete it and its contents.
 if (File.exists(background_dir)) {
 	File.delete(BackgroundImageOpen);
@@ -387,6 +396,7 @@ if (File.exists(background_dir)) {
 	selectWindow("Log");
 	run("Close");
 	}
+	
 //Inform user script is completed.
 beep();
 showMessage("Macro Completed!\n \nCompleted folder directory:\n"+FolderDir);
