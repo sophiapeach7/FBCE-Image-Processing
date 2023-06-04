@@ -154,21 +154,23 @@ for (i=0; i<OpenDP.length; i++) {
 
 //waitForUser("click cancel");
 
-for (i=StartDP; i<AllFolders.length; i++) {
+for (i=0; i<OpenDP.length; i++) {
+    //Establish the index of the current DP.
+    CurrentDP = OpenDP[i];
     //Turn Batch Mode on so that newly opened images are not displayed. This speeds up the processing.
 	setBatchMode(true);
 	//Creates a path to the current iteration of a folder.
-	Folder = FolderDir + AllFolders[i];
+	Folder = FolderDir + AllFolders[CurrentDP];
+    //Gets the datum point number of the currently opened stack.
+	ImportedSequenceName = toString(CurrentDP+1-FirstDPFactor);
 	//Add a message to the log which folder is being opened.
-	print("OPENING FOLDER: "+Folder+"\nDATUM POINT: "+(i+1-FirstDPFactor)+"\n\n");
+	print("OPENING FOLDER: "+Folder+"\nDATUM POINT: "+(ImportedSequenceName)+"\n\n");
 	//Open all the images in the datum point as a stack.
 	File.openSequence(Folder, " start=2");
 	//Print status update.
 	print("    ...Importing image sequence...\n\n");
-	//Get list of opened image/stack windows.
-	NameArray = getList("image.titles");
-	//Gets the datum point number of the currently opened stack.
-	ImportedSequenceName = parseInt(NameArray[0])-FirstDPFactor;
+	//Rename the stack into proper DP number.
+	rename(ImportedSequenceName);
 	//Creates directory for videos.
 	File.makeDirectory(VideoDir+ImportedSequenceName+"/");
 	//Print status update.
@@ -306,6 +308,7 @@ for (i=StartDP; i<AllFolders.length; i++) {
 	    //Hide the stack.
 	    setBatchMode("hide");
 	    //Select the whole image area.
+	    run("Select All");
 	    run("Select All");
 	    //Run macro that derives profile plot of each image and combines it into one matrix.
 	    run("StackPlotDataMacro ");
