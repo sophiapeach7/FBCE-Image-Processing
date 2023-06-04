@@ -135,15 +135,27 @@ for (i=0; i<TotalDP; i++)
   	}
   }  //At the end of this OpenDP contains datum points to be opened according to the experiment matrix notation. 
      //Need to be adjusted and converted to ImageJ indexing notation.
-     
-//Array.print(OpenDP);
 
+//Sets this value as false since DeleteDP variable has not been created yet.
+DeleteDPCreated = false;
 //Parses through all OpenDP values to remove single-phase flow DPs and convert the array into ImageJ indexing notation.
 for (i=0; i<OpenDP.length; i++) {
 	//If current datum point is single-phase.
 	if (OpenDP[i] <= SinglePhaseDP - FirstDPFactor) {
-		//Delete the datum point from the "open" array.
-		Array.deleteValue(OpenDP, OpenDP[i]);
+		//If DeleteDP array already exists.
+		if (DeleteDPCreated) {
+			//Ad current index to the array
+			DeleteDP = Array.concat(DeleteDP,i);
+		}
+		//If DeleteDp array does not exist.
+		else {
+			//Initialize the array.
+			DeleteDP = newArray(1);
+			//Make the current value equal to the current index.
+			DeleteDP[0] = i;
+			//Set DeleteDPCreated variable to true as DeleteDP variable now exists.
+			DeleteDPCreated = true;
+		}
 	}
 	//If current datum point is not single-phase.
 	else {
@@ -152,7 +164,11 @@ for (i=0; i<OpenDP.length; i++) {
 	}
 }
 
-//waitForUser("click cancel");
+//Parse through all indexes in DeleteDP.
+for (i=0; i<DeleteDP.length; i++) {
+	//Delete the datum point from the "open" array.
+	OpenDP = Array.deleteIndex(OpenDP,DeleteDP[i]-i);
+}
 
 for (i=0; i<OpenDP.length; i++) {
     //Establish the index of the current DP.
