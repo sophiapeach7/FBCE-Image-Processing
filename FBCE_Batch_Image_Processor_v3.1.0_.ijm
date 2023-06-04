@@ -42,8 +42,19 @@ Dialog.show();
 ExpNum = Dialog.getString();
 ExpName = Dialog.getString();
 
-//Creates a list of folders in the datum point folder
-AllFolders = getFileList(FolderDir);
+//Creates a dialog asking user how many datum point folders there are in the specified data folder.
+Dialog.create("NUMBER OF DATUM POINT FOLDERS");
+Dialog.addMessage("Input how many datum points folders there are in the specified data folder");
+Dialog.addNumber("Number of folders",0);
+Dialog.show();
+Nfolders = Dialog.getNumber();
+//Initializes array of folder names which will be used to create directories.
+AllFolders = newArray(Nfolders);
+//Parses through all the folder numbers and populates AllFolders array with them.
+for (i=0; i<Nfolders; i++) {
+	//Have to add "/" at the end because that is a part of folder path.
+	AllFolders[i] = toString(i+1)+"/";
+}
 
 //Asks user how many datum points from the beginning have single-phase flow
 Dialog.create("SINGLE-PHASE DATUM POINTS");
