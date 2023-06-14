@@ -42,23 +42,47 @@ Dialog.show();
 ExpNum = Dialog.getString();
 ExpName = Dialog.getString();
 
-//Creates a dialog asking user how many datum point folders there are in the specified data folder.
+//Creates a dialog asking user how many datum point folders there are in the specified data folder and whether the values can be assigned automatically.
 Dialog.create("NUMBER OF DATUM POINT FOLDERS");
-Dialog.addMessage("Input how many datum points folders there are in the specified data folder");
+Dialog.addMessage("Input how many datum points folders there are in the specified data folder.\n \nSpecify whether datum points are in a continuous ascending order or to assign them manually.");
 Dialog.addNumber("Number of folders",0);
+Dialog.addCheckbox("Assign values automatically",true);
 Dialog.show();
 Nfolders = Dialog.getNumber();
-//Initializes array of folder names which will be used to create directories.
-AllFolders = newArray(Nfolders);
-//Parses through all the folder numbers and populates AllFolders array with them.
-for (i=0; i<Nfolders; i++) {
-	//Have to add "/" at the end because that is a part of folder path.
-	AllFolders[i] = toString(i+1)+"/";
+AssignAuto = Dialog.getCheckbox();
+
+//If values are assigned automatically from 1 to nFolders in increments on 1.
+if (AssignAuto) {
+	//Initializes array of folder names which will be used to create directories.
+    AllFolders = newArray(Nfolders);
+    //Parses through all the folder numbers and populates AllFolders array with them.
+    for (i=0; i<Nfolders; i++) {
+	    //Have to add "/" at the end because that is a part of folder path.
+	    AllFolders[i] = toString(i+1)+"/";
+    }
+}
+//If datum point folders do not follow a continuous pattern.
+else {
+	//Creates a user interface with a number slot for each datum point folder
+	Dialog.create("Datum Point Values");
+	Dialog.addMessage("Indicate folder numbers, input in ascending order.");
+	for (i=0; i<Nfolders; i++) {
+		Dialog.addNumber("",0);
+	}
+	Dialog.show();
+	//Initializes array of folder names which will be used to create directories.
+	AllFoldersNumbers = newArray(Nfolders);
+    AllFolders = newArray(Nfolders);
+	for (i=0; i<Nfolders; i++) {
+		iFolder = Dialog.getNumber();
+		AllFoldersNumbers[i] = toString(iFolder);
+		AllFolders[i] = toString(iFolder)+"/";
+	}
 }
 
 //Asks user how many datum points from the beginning have single-phase flow
 Dialog.create("SINGLE-PHASE DATUM POINTS");
-Dialog.addMessage("Input how many Datum Points at the BEGINNING include only single-phase images regardless of what the datup point alignment is with the experiment matrix.\n \nThese folders will be ignored and one of the images will be used as background.\n \nEnter 0 for none.");
+Dialog.addMessage("Input how many Datum Points at the BEGINNING include only single-phase images regardless of what the datum point alignment is with the experiment matrix.\n \nThese folders will be ignored and one of the images will be used as background.\n \nEnter 0 for none.");
 Dialog.addNumber("Number of single-phase DP",0);
 Dialog.show();
 SinglePhaseDP = Dialog.getNumber();
@@ -113,7 +137,7 @@ defaults = newArray(TotalDP);
 //Parses through the length of the arrays.
 for (i=0; i<TotalDP; i++) {
   //Array "labels" are numbers from 1 in increments of 1.
-  labels[i] = d2s(i+1,0);
+  labels[i] = d2s(AllFoldersNumbers[i],0);
   //Array "defaults" has all "false" values.
   defaults[i] = true;
 }
@@ -175,10 +199,13 @@ for (i=0; i<OpenDP.length; i++) {
 	}
 }
 
-//Parse through all indexes in DeleteDP.
-for (i=0; i<DeleteDP.length; i++) {
+//If there are any datum points that need to be ignored.
+if (DeleteDPCreated) {
+	//Parse through all indexes in DeleteDP.
+	for (i=0; i<DeleteDP.length; i++) {
 	//Delete the datum point from the "open" array.
 	OpenDP = Array.deleteIndex(OpenDP,DeleteDP[i]-i);
+    }
 }
 
 for (i=0; i<OpenDP.length; i++) {
@@ -205,7 +232,7 @@ for (i=0; i<OpenDP.length; i++) {
 	showStatus("Creating movie");
 	showProgress(1,0);
 	//Saves unprocessed stack as video.
-	run("Movie...", "frame=30 container=.mov using=H.264 video=excellent save=["+VideoDir+ImportedSequenceName+"/"+ImportedSequenceName+"_raw"+".mov]");
+	run("Movie...", "frame=30 container=.mov using=H.264 video=low use save=["+VideoDir+ImportedSequenceName+"/"+ImportedSequenceName+"_raw"+".mov]");
 	//Opens background image.
 	open(BackgroundImageOpen);
 	//Print status update.
@@ -348,7 +375,7 @@ for (i=0; i<OpenDP.length; i++) {
 	//Print status update.
 	print("    ...Creating processed movie...");
 	//Save processed stack as video.
-	run("Movie...", "frame=30 container=.mov using=H.264 video=excellent save=["+VideoDir+ImportedSequenceName+"/"+ImportedSequenceName+"_processed"+".mov]");
+	run("Movie...", "frame=30 container=.mov using=H.264 video=low use save=["+VideoDir+ImportedSequenceName+"/"+ImportedSequenceName+"_processed"+".mov]");
 	//Select stack window.
 	selectWindow(ImportedSequenceName);
 	//Close the stack.
