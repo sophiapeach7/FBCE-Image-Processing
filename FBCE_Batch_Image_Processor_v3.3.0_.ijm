@@ -1,4 +1,4 @@
-//Temporary directory for all temporary files
+//Directory for all temporary files
 Temp_Dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,9 +54,11 @@ AssignAuto = Dialog.getCheckbox();
 //If values are assigned automatically from 1 to nFolders in increments on 1.
 if (AssignAuto) {
 	//Initializes array of folder names which will be used to create directories.
+	AllFoldersNumbers = newArray(Nfolders);
     AllFolders = newArray(Nfolders);
     //Parses through all the folder numbers and populates AllFolders array with them.
     for (i=0; i<Nfolders; i++) {
+		AllFoldersNumbers[i] = toString(i+1);
 	    //Have to add "/" at the end because that is a part of folder path.
 	    AllFolders[i] = toString(i+1)+"/";
     }
@@ -239,21 +241,22 @@ for (i=0; i<OpenDP.length; i++) {
 	print("    ...Subtracting background...\n\n");
 	showStatus("Subtracting background...");
 	//Subtracts background for the stack.
-	imageCalculator("Subtract create 32-bit stack",ImportedSequenceName,BackgroundImage);
-	//Selects the stack window.
-	selectWindow("Result of "+ImportedSequenceName);
+	imageCalculator("Difference stack", ImportedSequenceName,BackgroundImage);
 	//Print status update.
 	print("    ...Setting threshold...\n\n");
 	showStatus("Setting threshold...");
 	//Sets threshold from -Inf to -16 while setting noise pixels to NaN.
-	setAutoThreshold("Default");
-	setThreshold(-1000000000000000000000000000000.0000, -16.0000);
-	run("NaN Background", "stack");
+	selectWindow(ImportedSequenceName);
+    setThreshold(32, 255, "raw");
+    setOption("BlackBackground", true);
+    run("Convert to Mask", "method=Default background=Dark black");
+    close("\\Others");
 	//Print status update.
 	print("    ...Analyzing particles...\n\n");
 	showStatus("Analyzing particles...");
 	//Runs "Analyse Particles" function.
-	run("Analyze Particles...", "size=5-Infinity show=Masks include stack");
+	run("Analyze Particles...", "size=5-Infinity pixel show=Masks include stack");
+	close("\\Others");
 	//Sets Batch Mode to false, meaning that the last active window becomes visible and all the rest are discarded.
 	setBatchMode(false);
 	//After several operations the name of the stack is changed. This command renames it back to the datum point number.
