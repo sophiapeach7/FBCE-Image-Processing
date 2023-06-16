@@ -233,8 +233,12 @@ for (i=0; i<OpenDP.length; i++) {
 	print("    ...Creating raw movie...\n\n");
 	showStatus("Creating movie");
 	showProgress(1,0);
+	//Shows the raw image stack.
+	setBatchMode("show");
 	//Saves unprocessed stack as video.
-	run("Movie...", "frame=30 container=.mov using=H.264 video=low use save=["+VideoDir+ImportedSequenceName+"/"+ImportedSequenceName+"_raw"+".mov]");
+	run("Movie...", "frame=60 container=.mov using=H.264 video=excellent use save=["+VideoDir+ImportedSequenceName+"/"+ImportedSequenceName+"_raw"+".mov]");
+	//Hides the raw stack
+	setBatchMode("hide");
 	//Opens background image.
 	open(BackgroundImageOpen);
 	//Print status update.
@@ -331,12 +335,6 @@ for (i=0; i<OpenDP.length; i++) {
 	    rename(ImportedSequenceName);
 	    //Invert colors as images get iported with inverted colors.
 	    run("Invert LUT");
-	    //Select the whole image area.
-	    run("Select All");
-	    //Run macro that derives profile plot of each image and combines it into one matrix.
-	    run("StackPlotDataMacro ");
-	    //Format the table.
-	    run("Input/Output...", "jpeg=85 gif=-1 file=.csv use_file");
 	    //Print status update.
 	    print("    ...Deleting .txt files...\n\n");
 	    showStatus("Deleting .txt files...");
@@ -356,29 +354,20 @@ for (i=0; i<OpenDP.length; i++) {
 	    run("Close");
 	}
 	
-	//If the datum point does not have to be cleaned.
-	else {
-	    //Print status update.
-		print("    ...Running batch profile analysis macro...\n\n");
-		//Select stack window.
-	    selectWindow(ImportedSequenceName);
-	    //Hide the stack.
-	    setBatchMode("hide");
-	    //Select the whole image area.
-	    run("Select All");
-	    run("Select All");
-	    //Run macro that derives profile plot of each image and combines it into one matrix.
-	    run("StackPlotDataMacro ");
-	    //Format the table.
-	    run("Input/Output...", "jpeg=85 gif=-1 file=.csv use_file");
-	}
-	
 	//Select stack window.
 	selectWindow(ImportedSequenceName);
 	//Print status update.
 	print("    ...Creating processed movie...");
 	//Save processed stack as video.
-	run("Movie...", "frame=30 container=.mov using=H.264 video=low use save=["+VideoDir+ImportedSequenceName+"/"+ImportedSequenceName+"_processed"+".mov]");
+	run("Movie...", "frame=60 container=.mov using=H.264 video=normal use save=["+VideoDir+ImportedSequenceName+"/"+ImportedSequenceName+"_processed"+".mov]");
+	//Select stack window.
+	selectWindow(ImportedSequenceName);
+	//Select the whole image area.
+	run("Select All");
+	//Run macro that derives profile plot of each image and combines it into one matrix.
+	run("StackPlotDataMacro ");
+	//Format the table.
+	run("Input/Output...", "jpeg=85 gif=-1 file=.csv use_file");
 	//Select stack window.
 	selectWindow(ImportedSequenceName);
 	//Close the stack.
