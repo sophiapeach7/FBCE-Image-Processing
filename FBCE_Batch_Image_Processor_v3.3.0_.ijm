@@ -298,7 +298,7 @@ for (i=0; i<OpenDP.length; i++) {
 	    //Print status update.
 	    print("    ...Saving stack as .txt...\n\n");
 	    //Saves the whole stack as .txt files. One file per image.
-	    run("Image Sequence... ", "dir="+dir_intermediate+" format=Text name=[] start=1 digits=4 use");
+	    run("Image Sequence... ", "dir="+dir_intermediate+" format=Text name=[] start=1 digits=5 use");
 	    //Closes the stack.
 	    close();
 	    //Print status update.
