@@ -251,15 +251,19 @@ for (i=0; i<OpenDP.length; i++) {
 	showStatus("Setting threshold...");
 	//Sets threshold from -Inf to -16 while setting noise pixels to NaN.
 	selectWindow(ImportedSequenceName);
-    setThreshold(32, 255, "raw");
+    setThreshold(20, 255, "raw");
     setOption("BlackBackground", true);
     run("Convert to Mask", "method=Default background=Dark black");
+    //Print status update.
+	print("    ...Despeckling...\n\n");
+	showStatus("Despeckling...");
+    run("Despeckle", "stack");
     close("\\Others");
 	//Print status update.
 	print("    ...Analyzing particles...\n\n");
 	showStatus("Analyzing particles...");
 	//Runs "Analyse Particles" function.
-	run("Analyze Particles...", "size=5-Infinity pixel show=Masks include stack");
+	run("Analyze Particles...", "  show=Masks include stack");
 	close("\\Others");
 	//Sets Batch Mode to false, meaning that the last active window becomes visible and all the rest are discarded.
 	setBatchMode(false);
