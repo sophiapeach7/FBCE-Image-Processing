@@ -236,7 +236,7 @@ for (i=0; i<OpenDP.length; i++) {
 	//Shows the raw image stack.
 	setBatchMode("show");
 	//Saves unprocessed stack as video.
-	run("Movie...", "frame=60 container=.mov using=H.264 video=excellent use save=["+VideoDir+ImportedSequenceName+"/"+ImportedSequenceName+"_raw"+".mov]");
+	run("Movie...", "frame=30 container=.mov using=H.264 video=high use save=["+VideoDir+ImportedSequenceName+"/"+ImportedSequenceName+"_raw"+".mov]");
 	//Hides the raw stack
 	setBatchMode("hide");
 	//Opens background image.
@@ -360,10 +360,12 @@ for (i=0; i<OpenDP.length; i++) {
 	
 	//Select stack window.
 	selectWindow(ImportedSequenceName);
+	//Show the stack again for the video
+	setBatchMode("show");
 	//Print status update.
 	print("    ...Creating processed movie...");
 	//Save processed stack as video.
-	run("Movie...", "frame=60 container=.mov using=H.264 video=normal use save=["+VideoDir+ImportedSequenceName+"/"+ImportedSequenceName+"_processed"+".mov]");
+	run("Movie...", "frame=30 container=.mov using=H.264 video=normal use save=["+VideoDir+ImportedSequenceName+"/"+ImportedSequenceName+"_processed"+".mov]");
 	//Select stack window.
 	selectWindow(ImportedSequenceName);
 	//Select the whole image area.
@@ -384,6 +386,7 @@ for (i=0; i<OpenDP.length; i++) {
 	//Select and close Log window.
 	selectWindow("Log");
 	run("Close");
+	run("Close All");
 }
 
 
@@ -424,7 +427,7 @@ close("*");
 selectWindow("Results");
 run("Close");
 
-//Create a new "Resulsts" table and write useful data to it for MATLAB processing.
+//Create a new "Results" table and write useful data to it for MATLAB processing.
 setResult("Single-phase DP",0,SinglePhaseDP);
 setResult("ImageJ Data Dir",0,DataDir);
 setResult("Save Dir",0,VFASaveDir);
@@ -439,8 +442,6 @@ run("Input/Output...", "jpeg=85 gif=-1 file=.csv use_file save_column");
 saveAs("Results",Temp_Dir+"/_intermediate_data_transfer_.csv");
 //Close it.
 run("Close");
-//Run analysis code on MATLAB.
-run("Run VoidFractionCalculator ");
 
 //If intermediate background directory exists, delete it and its contents.
 if (File.exists(background_dir)) {
@@ -449,6 +450,9 @@ if (File.exists(background_dir)) {
 	selectWindow("Log");
 	run("Close");
 	}
+	
+//Run analysis code on MATLAB.
+run("Run VoidFractionCalculator ");	
 	
 //Inform user script is completed.
 beep();
