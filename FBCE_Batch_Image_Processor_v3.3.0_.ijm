@@ -6,6 +6,7 @@ Temp_Dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing";
 //Set CleanRest to default value of false
 //Create path to separate intermediate folders for .txt image files and working background
 CleanRest = false;
+clean = false;
 dir_intermediate = Temp_Dir+"/_dir_intermediate_/";
 background_dir = Temp_Dir+"/WORKING BACKGROUND/";
 
@@ -36,11 +37,16 @@ VFASaveDir = VFASaveDir+"Analysis/Void Fraction Analysis/";
 //Prompt for experiment name and number
 Dialog.create("EXPERIMENT INFORMATION");
 Dialog.addMessage("Input experiment information");
-Dialog.addString("Experiment number","0.0.0");
-Dialog.addString("Experiment name","...");
+Dialog.addString("Experiment number","0.0.0",10);
+Dialog.addString("Experiment name","...",100);
+Dialog.addMessage("________________________________________________________________________________________________________________");
+Dialog.addChoice("Heated Side(s) at Once", newArray("Bottom/One at a Time","Both"), "Bottom");
+Dialog.addChoice("Time Dependency", newArray("Steady-state","Transient"), "Steady-state");
 Dialog.show();
 ExpNum = Dialog.getString();
 ExpName = Dialog.getString();
+HeatedSide = Dialog.getChoice();
+TimeWise = Dialog.getChoice();
 
 //Creates a dialog asking user how many datum point folders there are in the specified data folder and whether the values can be assigned automatically.
 Dialog.create("NUMBER OF DATUM POINT FOLDERS");
@@ -82,12 +88,16 @@ else {
 	}
 }
 
-//Asks user how many datum points from the beginning have single-phase flow
-Dialog.create("SINGLE-PHASE DATUM POINTS");
+//Asks user how many datum points from the beginning have single-phase flow and ask user to align the datum points in the datum point folder and in the experiment matrix
+Dialog.create("DATUM POINT SETTINGS");
 Dialog.addMessage("Input how many Datum Points at the BEGINNING include only single-phase images regardless of what the datum point alignment is with the experiment matrix.\n \nThese folders will be ignored and one of the images will be used as background.\n \nEnter 0 for none.");
 Dialog.addNumber("Number of single-phase DP",0);
+Dialog.addMessage("____________________________________________________________________________________________________________________________");
+Dialog.addMessage("Input which datum point in the images folder corresponds to the first datum point in the experiment matrix.\n \nIf they are perfectly aligned enter 1.\n \nDo not just enter the folder name but rather its order in the datum point folder.");
+Dialog.addNumber("Folder number correspoding to 1st DP",1);
 Dialog.show();
 SinglePhaseDP = Dialog.getNumber();
+FirstDPFactor = Dialog.getNumber()-1;
 
 //If there are 1 or more single-phase folders, routes to the first image in the first folder and uses as background
 if (SinglePhaseDP > 0) {
@@ -111,14 +121,6 @@ else {
 	//Routes the path to the background image to be used in the 'open' function
 	BackgroundImageOpen = background_dir+BackgroundImage;
 }
-
-
-//Creates a diolog to ask user to align the datum points in the datum point folder and in the experiment matrix
-Dialog.create("EXPERIMENT MATRIX DATUM POINT ALIGNMENT");
-Dialog.addMessage("Input which datum point in the images folder corresponds to the first datum point in the experiment matrix.\n \nIf they are perfectly aligned enter 1.\n \nDo not just enter the folder name but rather its order in the datum point folder.");
-Dialog.addNumber("Folder number correspoding to 1st DP",1);
-Dialog.show();
-FirstDPFactor = Dialog.getNumber()-1;
 
 //If there are more single phase datum points than the 1st datum point number. Meaning one or more datum points in the experiment matrix resulted in single phase flow
 if (SinglePhaseDP > FirstDPFactor)
@@ -270,26 +272,29 @@ for (i=0; i<OpenDP.length; i++) {
 	//After several operations the name of the stack is changed. This command renames it back to the datum point number.
 	rename(ImportedSequenceName);
 	
-	//If CleanRest is activated, automatically sets 'clean' to true.
-	if (CleanRest) {
-		clean = true;
-	}
-	
-	//Otherwise prompts user to decide whether the stack needs to be cleaned of shadows.
-	else {
-	    //Produces a beeping sound to attract user's attention.
-		beep();
-		//Creates a dialogue box that pauses the code so that user can scroll through the stack and see whether it needs to be filtered. 
-		//The reason 'waitForUser' is used instead of 'Dialog...' is because the latter is a modal figure and does not allow interaction with the rest of the system as long as it stays active.
-		waitForUser("See whether stack needs cleaning \n \nClick OK to proceed");
-		//Decision dialog where user can chose whether to clean the stack and/or whether to automatically clean the rest of datum points.
-		Dialog.create("DECISION REQUIRED");
-		Dialog.addMessage("Does stack need cleaning?\n \nCheck 'Clean Rest' to clean the rest of folders as well.\nIf checked, you will not be prompted this again.");
-		Dialog.addCheckbox("Check to clean", true);
-		Dialog.addCheckbox("Clean rest",false);
-		Dialog.show();
-		clean = Dialog.getCheckbox();
-		CleanRest = Dialog.getCheckbox();
+	//If only one side is heated per datum point, the stack might have to be cleaned.
+	if (HeatedSide == "Bottom/One at a Time") {
+		//If CleanRest is activated, automatically sets 'clean' to true.
+		if (CleanRest) {
+			clean = true;
+		}
+		
+		//Otherwise prompts user to decide whether the stack needs to be cleaned of shadows.
+		else {
+		    //Produces a beeping sound to attract user's attention.
+			beep();
+			//Creates a dialogue box that pauses the code so that user can scroll through the stack and see whether it needs to be filtered. 
+			//The reason 'waitForUser' is used instead of 'Dialog...' is because the latter is a modal figure and does not allow interaction with the rest of the system as long as it stays active.
+			waitForUser("See whether stack needs cleaning \n \nClick OK to proceed");
+			//Decision dialog where user can chose whether to clean the stack and/or whether to automatically clean the rest of datum points.
+			Dialog.create("DECISION REQUIRED");
+			Dialog.addMessage("Does stack need cleaning?\n \nCheck 'Clean Rest' to clean the rest of folders as well.\nIf checked, you will not be prompted this again.");
+			Dialog.addCheckbox("Check to clean", true);
+			Dialog.addCheckbox("Clean rest",false);
+			Dialog.show();
+			clean = Dialog.getCheckbox();
+			CleanRest = Dialog.getCheckbox();
+		}
 	}
 	
 	
