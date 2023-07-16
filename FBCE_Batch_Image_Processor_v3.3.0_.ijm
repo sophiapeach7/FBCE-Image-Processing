@@ -1,10 +1,10 @@
-//Directory for all temporary files
+//Directory for all temporary files.
 Temp_Dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing";
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//Set CleanRest to default value of false
-//Create path to separate intermediate folders for .txt image files and working background
+//Set CleanRest to default value of false.
+//Create path to separate intermediate folders for .txt image files and working background.
 CleanRest = false;
 clean = false;
 dir_intermediate = Temp_Dir+"/_dir_intermediate_/";
@@ -13,28 +13,28 @@ background_dir = Temp_Dir+"/WORKING BACKGROUND/";
 //Initiates Log window
 print("MACRO STARTED\n_______________________________________________________ \n\n");
 
-//First prompt to user to select directory where experiment datum point folders are located
-//Have to manipulate file to get actual workable directory that can be used in ImageJ
+//First prompt to user to select directory where experiment datum point folders are located.
+//Have to manipulate file to get actual workable directory that can be used in ImageJ.
 folderdir = getDirectory("Indicate directory with datum point folders containing raw images");
 FolderDir = File.getDirectory(folderdir+"mockfile");
 
-//Prompt to user to select the folder where processed data is saved
+//Prompt to user to select the folder where processed data is saved.
 savedir = getDirectory("Indicate processed experiment directory");
 SaveDir = File.getDirectory(savedir+"Data/mockfile");
-//Routes to separate data and video folders
+//Routes to separate data and video folders.
 DataDir = SaveDir+"ImageJ Data/";
 VideoDir = SaveDir+"Videos/";
-//Creates these directories
+//Creates these directories.
 File.makeDirectory(SaveDir);
 File.makeDirectory(DataDir);
 File.makeDirectory(VideoDir);
-//Pulls void fraction analysis directory and creates it, then updates directory again
+//Pulls void fraction analysis directory and creates it, then updates directory again..
 VFASaveDir = File.getDirectory(SaveDir);
 File.makeDirectory(VFASaveDir+"Analysis/");
 File.makeDirectory(VFASaveDir+"Analysis/Void Fraction Analysis/");
 VFASaveDir = VFASaveDir+"Analysis/Void Fraction Analysis/";
 
-//Prompt for experiment name and number
+//Prompt for experiment name, number, whether both or only side is heated at once and whether the experiment is steady-state or transient.
 Dialog.create("EXPERIMENT INFORMATION");
 Dialog.addMessage("Input experiment information");
 Dialog.addString("Experiment number","0.0.0",10);
@@ -47,6 +47,14 @@ ExpNum = Dialog.getString();
 ExpName = Dialog.getString();
 HeatedSide = Dialog.getChoice();
 TimeWise = Dialog.getChoice();
+
+//If experiment is transient and only one sided, this part creates a dialogue asking user to select whether it is On/Off or Alternating.
+if (HeatedSide == "Bottom/One at a Time" && TimeWise == "Transient") {
+	Dialog.create("TRANSIENT EXPERIMENT TYPE");
+	Dialog.addChoice("Please indicate which transient experiment type does the experiment correspond to", newArray("On/Off","Alternating"), "On/Off");
+	Dialog.show();
+	TimeWise = Dialog.getChoice();
+}
 
 //Creates a dialog asking user how many datum point folders there are in the specified data folder and whether the values can be assigned automatically.
 Dialog.create("NUMBER OF DATUM POINT FOLDERS");
@@ -273,7 +281,7 @@ for (i=0; i<OpenDP.length; i++) {
 	rename(ImportedSequenceName);
 	
 	//If only one side is heated per datum point, the stack might have to be cleaned.
-	if (HeatedSide == "Bottom/One at a Time") {
+	if (HeatedSide == "Bottom/One at a Time" && TimeWise != "On/Off") {
 		//If CleanRest is activated, automatically sets 'clean' to true.
 		if (CleanRest) {
 			clean = true;
@@ -283,17 +291,44 @@ for (i=0; i<OpenDP.length; i++) {
 		else {
 		    //Produces a beeping sound to attract user's attention.
 			beep();
-			//Creates a dialogue box that pauses the code so that user can scroll through the stack and see whether it needs to be filtered. 
-			//The reason 'waitForUser' is used instead of 'Dialog...' is because the latter is a modal figure and does not allow interaction with the rest of the system as long as it stays active.
-			waitForUser("See whether stack needs cleaning \n \nClick OK to proceed");
 			//Decision dialog where user can chose whether to clean the stack and/or whether to automatically clean the rest of datum points.
-			Dialog.create("DECISION REQUIRED");
+			Dialog.createNonBlocking("DECISION REQUIRED");
 			Dialog.addMessage("Does stack need cleaning?\n \nCheck 'Clean Rest' to clean the rest of folders as well.\nIf checked, you will not be prompted this again.");
 			Dialog.addCheckbox("Check to clean", true);
 			Dialog.addCheckbox("Clean rest",false);
 			Dialog.show();
 			clean = Dialog.getCheckbox();
 			CleanRest = Dialog.getCheckbox();
+			CleanStack = ImportedSequenceName;
+		}
+	}
+	else {
+		if (TimeWise == "On/Off") {
+			Dialog.createNonBlocking("DECISION REQUIRED");
+			Dialog.addMessage("Does stack need cleaning?\n \nIf not, options below are not considered.\n \nThis prompt is specialized for single-sided, transient, On/Off experiments.\n \nIf selected 'Beginning', images will be cleaned (0-break).\nWith 'break' being the value of the 'Start/End at:' prompt.\nIf selected 'End', images will be cleaned (break-end)");
+			Dialog.addCheckbox("Check to clean", true);
+			Dialog.addChoice("Clean at the:", newArray("beginning","end"));
+			Dialog.addNumber("Start/End at:",0);
+			Dialog.show();
+			clean = Dialog.getCheckbox();
+			StartorEnd = Dialog.getChoice();
+			Break = Dialog.getNumber();
+			
+			if (clean) {
+				if (StartorEnd == "beginning") {
+					Start = 1;
+					End = Break;
+				}
+				else {
+					Start = Break;
+					End = nSlices;
+				}
+				run("Make Substack...", "slices="+Start+"-"+End+" delete");
+				selectWindow("Substack ("+Start+"-"+End+")");
+				rename("Substack");
+				CleanStack = "Substack";
+			}
+			
 		}
 	}
 	
@@ -303,7 +338,7 @@ for (i=0; i<OpenDP.length; i++) {
 	    //Create intermediate diarectory where stack is saved as .txt files.
 		File.makeDirectory(dir_intermediate);
 		//Selects the stack window.
-	    selectWindow(ImportedSequenceName);
+	    selectWindow(CleanStack);
 	    //Print status update.
 	    print("    ...Saving stack as .txt...\n\n");
 	    //Saves the whole stack as .txt files. One file per image.
@@ -336,18 +371,24 @@ for (i=0; i<OpenDP.length; i++) {
 	    run("Images to Stack", "use");
 	    //Set Batch Mode to false so that cleaned stack becomes visible and individually opened images are discarded.
 	    setBatchMode(false);
-	    //Hide the stack again.
-	    setBatchMode("hide");
-	    //Print update.
-	    print("    ...Running batch profile analysis macro...\n\n");
 	    //Rename the stack into original name.
-	    rename(ImportedSequenceName);
-	    //Invert colors as images get iported with inverted colors.
+	    rename(CleanStack);
+	    //Invert colors as images get imported with inverted colors.
 	    run("Invert LUT");
+	    //Convert the imported stack into 8-bit.
+	    run("8-bit");
+	    if (CleanStack == "Substack") {
+	    	if (StartorEnd == "beginning") {
+	    		run("Concatenate...", "  title="+ImportedSequenceName+" image1=Substack image2="+ImportedSequenceName);
+	    	}
+	    	else {
+	    		run("Concatenate...", "  title="+ImportedSequenceName+" image1="+ImportedSequenceName+" image2=Substack");
+	    	}
+	    }
 	    //Print status update.
 	    print("    ...Deleting .txt files...\n\n");
 	    showStatus("Deleting .txt files...");
-	    //Parse through each .txt image file in the list
+	    //Parse through each .txt image file in the list.
 	    for (n=0; n<list.length; n++) {
 	        //Delete file.
 	    	File.delete(dir_intermediate+list[n]);
@@ -365,14 +406,14 @@ for (i=0; i<OpenDP.length; i++) {
 	
 	//Select stack window.
 	selectWindow(ImportedSequenceName);
-	//Show the stack again for the video
-	setBatchMode("show");
 	//Print status update.
 	print("    ...Creating processed movie...");
 	//Save processed stack as video.
 	run("Movie...", "frame=30 container=.mov using=H.264 video=normal use save=["+VideoDir+ImportedSequenceName+"/"+ImportedSequenceName+"_processed"+".mov]");
 	//Select stack window.
 	selectWindow(ImportedSequenceName);
+	//Print update.
+	print("    ...Running batch profile analysis macro...\n\n");
 	//Select the whole image area.
 	run("Select All");
 	//Run macro that derives profile plot of each image and combines it into one matrix.
