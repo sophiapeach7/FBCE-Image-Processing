@@ -228,7 +228,7 @@ for (i=0; i<OpenDP.length; i++) {
 	//Creates a path to the current iteration of a folder.
 	Folder = FolderDir + AllFolders[CurrentDP];
     //Gets the datum point number of the currently opened stack.
-	ImportedSequenceName = toString(CurrentDP+1-FirstDPFactor);
+	ImportedSequenceName = toString(AllFoldersNumbers[CurrentDP]+1-FirstDPFactor);
 	//Add a message to the log which folder is being opened.
 	print("OPENING FOLDER: "+Folder+"\nDATUM POINT: "+(ImportedSequenceName)+"\n\n");
 	//Open all the images in the datum point as a stack.
@@ -344,7 +344,7 @@ for (i=0; i<OpenDP.length; i++) {
 	    //Saves the whole stack as .txt files. One file per image.
 	    run("Image Sequence... ", "dir="+dir_intermediate+" format=Text name=[] start=1 digits=5 use");
 	    //Closes the stack.
-	    close();
+	    close(CleanStack);
 	    //Print status update.
 	    print("    ...Running MATLAB cleanup code...\n\n");
 	    showStatus("Running cleanup code...");
@@ -407,7 +407,7 @@ for (i=0; i<OpenDP.length; i++) {
 	//Select stack window.
 	selectWindow(ImportedSequenceName);
 	//Print status update.
-	print("    ...Creating processed movie...");
+	print("    ...Creating processed movie...\n\n");
 	//Save processed stack as video.
 	run("Movie...", "frame=30 container=.mov using=H.264 video=normal use save=["+VideoDir+ImportedSequenceName+"/"+ImportedSequenceName+"_processed"+".mov]");
 	//Select stack window.
@@ -416,14 +416,14 @@ for (i=0; i<OpenDP.length; i++) {
 	print("    ...Running batch profile analysis macro...\n\n");
 	//Select the whole image area.
 	run("Select All");
+	//Hide the stack.
+	setBatchMode("hide");
 	//Run macro that derives profile plot of each image and combines it into one matrix.
 	run("StackPlotDataMacro ");
 	//Format the table.
 	run("Input/Output...", "jpeg=85 gif=-1 file=.csv use_file");
-	//Select stack window.
-	selectWindow(ImportedSequenceName);
-	//Close the stack.
-	run("Close");
+	//Close old stack.
+	close(ImportedSequenceName);
 	//Save table as .csv file.
 	saveAs("Results", DataDir+ImportedSequenceName+".csv");
 	//Select the table window and close it.
