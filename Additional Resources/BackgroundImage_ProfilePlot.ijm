@@ -1,6 +1,6 @@
 Temp_Dir = "C:/Users/Sophia/Documents/GitHub/FBCE_ImageProcessing";
 Dialog.create("BACKGROUND IMAGE OPTIONS");
-Dialog.addFile("Select Background Image","D:/Unzipped Images/_______________________________________________________________________________________________________________________________________");
+Dialog.addFile("Select Background Image","D:/Unzipped Images/_____________________________________________________________________________________________");
 Dialog.show();
 BackgroundImageOpen = Dialog.getString();
 BackgroundImage = File.getName(BackgroundImageOpen);
@@ -32,6 +32,8 @@ for (i=0; i<profile.length; i++)
       setResult("Value", i, profile[i]);
 //Update the table.
 updateResults;
+//Format table.
+run("Input/Output...", "jpeg=85 gif=-1 file=.csv use_file save_column");
 //Save the table as a .csv file.
 saveAs("Results", Temp_Dir+"/Background_GrayValues.csv");
 //Close all image windows.
@@ -39,3 +41,4 @@ close("*");
 //Select the table and close it.
 selectWindow("Results");
 run("Close");
+showMessage("Macro Completed!");
