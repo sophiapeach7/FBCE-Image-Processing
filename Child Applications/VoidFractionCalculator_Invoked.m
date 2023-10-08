@@ -46,10 +46,12 @@ end
 
 %% PROCESSING DATA
 
+%Multiply by image pixel height to obtain total grey value and divide by
+%black color grey value to obtain number of black pixels
 bck_gv = bck_gv*164/255;
 
-for i = 2+n1p:nfiles+1+n1p
-    [empty,name] = fileparts(files(i-1-n1p).name);
+for i = 1:nfiles
+    [empty,name] = fileparts(files(i).name);
     xname = append('X',name);
     DP = eval(xname);
     n = eval(name);
