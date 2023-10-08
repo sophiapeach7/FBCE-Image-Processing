@@ -228,7 +228,7 @@ for (i=0; i<OpenDP.length; i++) {
 	//Creates a path to the current iteration of a folder.
 	Folder = FolderDir + AllFolders[CurrentDP];
     //Gets the datum point number of the currently opened stack.
-	ImportedSequenceName = toString(AllFoldersNumbers[CurrentDP]+1-FirstDPFactor);
+	ImportedSequenceName = toString(parseInt(AllFoldersNumbers[CurrentDP])-FirstDPFactor);
 	//Add a message to the log which folder is being opened.
 	print("OPENING FOLDER: "+Folder+"\nDATUM POINT: "+(ImportedSequenceName)+"\n\n");
 	//Open all the images in the datum point as a stack.
@@ -285,6 +285,7 @@ for (i=0; i<OpenDP.length; i++) {
 		//If CleanRest is activated, automatically sets 'clean' to true.
 		if (CleanRest) {
 			clean = true;
+			CleanStack = ImportedSequenceName;
 		}
 		
 		//Otherwise prompts user to decide whether the stack needs to be cleaned of shadows.
